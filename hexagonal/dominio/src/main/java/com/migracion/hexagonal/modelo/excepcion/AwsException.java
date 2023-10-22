@@ -1,4 +1,4 @@
-package com.migracion.hexagonal.excepciones;
+package com.migracion.hexagonal.modelo.excepcion;
 
 public class AwsException extends RuntimeException {
 

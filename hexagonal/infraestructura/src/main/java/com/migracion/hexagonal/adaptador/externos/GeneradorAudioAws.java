@@ -10,64 +10,66 @@ import com.amazonaws.services.polly.model.OutputFormat;
 import com.amazonaws.services.polly.model.SynthesizeSpeechRequest;
 import com.amazonaws.services.polly.model.SynthesizeSpeechResult;
 import com.amazonaws.services.polly.model.VoiceId;
-import com.migracion.hexagonal.adaptador.externos.utils.GlobalConstants;
-import com.migracion.hexagonal.excepciones.AwsException;
+import com.migracion.hexagonal.adaptador.externos.utils.ConstantesGlobales;
+import com.migracion.hexagonal.modelo.excepcion.AwsException;
 import com.migracion.hexagonal.puerto.GeneradorAudio;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.InputStream;
 
+
+@Slf4j
 public class GeneradorAudioAws implements GeneradorAudio {
 
-    private final String connectionString;
-    private final String containerName;
+    private final String claveAcceso;
+    private final String claveSecreta;
 
-    public GeneradorAudioAws(@Value("${azure.storage.connection-string}") String connectionString,
-                            @Value("${azure.storage.containerName}")String containerName) {
-        this.connectionString = connectionString;
-        this.containerName = containerName;
+    public GeneradorAudioAws(@Value("${aws.polly.access-key}") String claveAcceso,
+                                       @Value("${aws.polly.secret-key}")String claveSecreta) {
+        this.claveAcceso = claveAcceso;
+        this.claveSecreta = claveSecreta;
     }
 
-
     @Override
-    public InputStream generarAudioConRecomendacion(String messageToAudio) {
-        InputStream audioStream;
+    public InputStream generarAudioConRecomendacion(String mensajeParaAudio) {
+        InputStream flujoAudio;
 
         try {
 
-            BasicAWSCredentials awsCreds = new BasicAWSCredentials(this.accessKey , this.secretKey);
+            BasicAWSCredentials credencialesAws = new BasicAWSCredentials(this.claveAcceso, this.claveSecreta);
 
-            AmazonPolly client = AmazonPollyClientBuilder.standard()
-                    .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+            AmazonPolly cliente = AmazonPollyClientBuilder.standard()
+                    .withCredentials(new AWSStaticCredentialsProvider(credencialesAws))
                     .withRegion(Regions.US_EAST_1)
                     .build();
 
-            VoiceId voice = typeVoiceBaseOnSizeMessage(messageToAudio);
-            Engine engine = typeEngineBaseOnSizeMessage(messageToAudio);
+            VoiceId idVoz = tipoVozBasadoEnTamanioMensaje(mensajeParaAudio);
+            Engine motorVoz = tipoMotorBasadoEnTamanioMensaje(mensajeParaAudio);
 
-            SynthesizeSpeechRequest synthReq = new SynthesizeSpeechRequest()
-                    .withText(messageToAudio)
-                    .withVoiceId(voice)
+            SynthesizeSpeechRequest solicitudSintesis = new SynthesizeSpeechRequest()
+                    .withText(mensajeParaAudio)
+                    .withVoiceId(idVoz)
                     .withOutputFormat(OutputFormat.Mp3)
-                    .withEngine(engine);
-            SynthesizeSpeechResult synthRes = client.synthesizeSpeech(synthReq);
+                    .withEngine(motorVoz);
+            SynthesizeSpeechResult resultadoSintesis = cliente.synthesizeSpeech(solicitudSintesis);
+            flujoAudio = resultadoSintesis.getAudioStream();
 
-            audioStream = synthRes.getAudioStream();
-
-            System.out.printf(GlobalConstants.LA_COMUNICACION_CON_AWS_FUE_EXITOSA);
+            log.info(ConstantesGlobales.EXITO_COMUNICACION_AWS);
         } catch (Exception e) {
-            System.out.printf(GlobalConstants.SE_PRODUJO_UN_ERROR_EN_LA_COMUNICACION_CON_AWS, e);
+            log.error(ConstantesGlobales.ERROR_COMUNICACION_AWS, e);
             throw new AwsException(e.getMessage());
         }
 
-        return audioStream;
+        return flujoAudio;
     }
 
-    private static VoiceId typeVoiceBaseOnSizeMessage(String messageToAudio) {
-        return messageToAudio.length() <= GlobalConstants.LIMIT_NEURAL_VOICE ? VoiceId.Mia : VoiceId.Penelope;
+    private static VoiceId tipoVozBasadoEnTamanioMensaje(String mensajeParaAudio) {
+        return mensajeParaAudio.length() <= ConstantesGlobales.LIMITE_VOZ_NEURAL ? VoiceId.Mia : VoiceId.Penelope;
     }
 
-    private static Engine typeEngineBaseOnSizeMessage(String messageToAudio) {
-        return messageToAudio.length() <= GlobalConstants.LIMIT_NEURAL_VOICE ? Engine.Neural : Engine.Standard;
+    private static Engine tipoMotorBasadoEnTamanioMensaje(String mensajeParaAudio) {
+        return mensajeParaAudio.length() <= ConstantesGlobales.LIMITE_VOZ_NEURAL ? Engine.Neural : Engine.Standard;
     }
 
 }

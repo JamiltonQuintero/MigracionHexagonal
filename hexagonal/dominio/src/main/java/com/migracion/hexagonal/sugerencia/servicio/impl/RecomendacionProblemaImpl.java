@@ -1,7 +1,7 @@
 package com.migracion.hexagonal.sugerencia.servicio.impl;
 
 import com.migracion.hexagonal.sugerencia.modelo.dto.SugerenciaProblemaIADto;
-import com.migracion.hexagonal.sugerencia.modelo.dto.SugerenciaRequest;
+import com.migracion.hexagonal.sugerencia.modelo.dto.RespuestaFinalRequest;
 import com.migracion.hexagonal.sugerencia.puerto.SugerenciaIA;
 import com.migracion.hexagonal.sugerencia.servicio.RecomendacionProblema;
 
@@ -21,7 +21,7 @@ public class RecomendacionProblemaImpl implements RecomendacionProblema {
     }
 
     @Override
-    public SugerenciaProblemaIADto obtenerRecomendacion(SugerenciaRequest solicitudProblema){
+    public SugerenciaProblemaIADto obtenerRecomendacion(RespuestaFinalRequest solicitudProblema){
 
         String marca = obtenerMarcaPrincipal(solicitudProblema);
 
@@ -35,26 +35,26 @@ public class RecomendacionProblemaImpl implements RecomendacionProblema {
         return futuroCombinado.join();
     }
 
-    private String obtenerMarcaPrincipal(SugerenciaRequest solicitudProblema) {
+    private String obtenerMarcaPrincipal(RespuestaFinalRequest solicitudProblema) {
         String mensaje = String.format(MENSAJE_BASE_TIPO_PRINCIPAL, solicitudProblema.getProblema());
         return obtenerMarcaPrincipal(this.sugerenciaIA.obtenerRespuestaIA(mensaje));
     }
 
-    private String obtenerComponentesSugerencia(SugerenciaRequest solicitudProblema, String marca) {
+    private String obtenerComponentesSugerencia(RespuestaFinalRequest solicitudProblema, String marca) {
         String mensaje = obtenerComponentesSugerenciaBasadoEnEdadYGenero(solicitudProblema, marca);
         return this.sugerenciaIA.obtenerRespuestaIA(mensaje);
     }
 
-    private String obtenerComponentesSugerenciaBasadoEnEdadYGenero(SugerenciaRequest solicitudProblema, String marca) {
+    private String obtenerComponentesSugerenciaBasadoEnEdadYGenero(RespuestaFinalRequest solicitudProblema, String marca) {
         return String.format(MENSAJE_BASE_SUGERENCIA_COMPONENTES, marca, solicitudProblema.getProblema(), solicitudProblema.getGeneroCliente(), solicitudProblema.getEdadCliente());
     }
 
-    private String obtenerSugerenciaRutina(SugerenciaRequest solicitudProblema, String marca) {
+    private String obtenerSugerenciaRutina(RespuestaFinalRequest solicitudProblema, String marca) {
         String mensaje = obtenerRutinaSugerenciaBasadoEnEdadYGenero(solicitudProblema, marca);
         return this.sugerenciaIA.obtenerRespuestaIA(mensaje);
     }
 
-    private String obtenerRutinaSugerenciaBasadoEnEdadYGenero(SugerenciaRequest solicitudProblema, String marca) {
+    private String obtenerRutinaSugerenciaBasadoEnEdadYGenero(RespuestaFinalRequest solicitudProblema, String marca) {
         return String.format(MENSAJE_BASE_SUGERENCIA_RUTINA, marca, marca, solicitudProblema.getProblema(), solicitudProblema.getGeneroCliente(), solicitudProblema.getEdadCliente());
     }
 

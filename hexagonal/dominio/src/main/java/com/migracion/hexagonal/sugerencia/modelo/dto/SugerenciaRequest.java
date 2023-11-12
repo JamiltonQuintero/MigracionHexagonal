@@ -1,17 +1,22 @@
 package com.migracion.hexagonal.sugerencia.modelo.dto;
 
-import com.migracion.hexagonal.problema.modelo.enums.GeneroEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class SugerenciaRequest {
 
-    private GeneroEnum generoCliente;
-    private byte edadCliente;
-    private String problema;
+    private String solucionComponenteQuimico;
+    private String solucionRutina;
+    private String urlAudio;
+    private String idsProductos;
+    private Long problemaId;
 
 }

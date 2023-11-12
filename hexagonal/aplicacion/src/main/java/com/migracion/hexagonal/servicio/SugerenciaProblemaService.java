@@ -1,15 +1,15 @@
 package com.migracion.hexagonal.servicio;
 
 import com.migracion.hexagonal.casosusos.SugerenciaProblema;
-import com.migracion.hexagonal.problema.modelo.entity.Problema;
-import com.migracion.hexagonal.problema.puerto.ProblemaRepository;
+import com.migracion.hexagonal.problema.modelo.dto.ProblemaRequest;
+import com.migracion.hexagonal.problema.puerto.Problema;
 import com.migracion.hexagonal.sugerencia.modelo.dto.SugerenciaProblemaIADto;
+import com.migracion.hexagonal.sugerencia.modelo.dto.RespuestaFinalRequest;
 import com.migracion.hexagonal.sugerencia.modelo.dto.SugerenciaRequest;
 import com.migracion.hexagonal.sugerencia.modelo.dto.SugerenciaResponse;
-import com.migracion.hexagonal.sugerencia.modelo.entity.Sugerencia;
 import com.migracion.hexagonal.sugerencia.puerto.AlmacenadorAudio;
 import com.migracion.hexagonal.sugerencia.puerto.GeneradorAudio;
-import com.migracion.hexagonal.sugerencia.puerto.SugerenciaRepository;
+import com.migracion.hexagonal.sugerencia.puerto.Sugerencia;
 import com.migracion.hexagonal.sugerencia.servicio.RecomendacionProblema;
 import org.springframework.stereotype.Service;
 
@@ -27,29 +27,28 @@ public class SugerenciaProblemaService implements SugerenciaProblema {
     private final AlmacenadorAudio almacenadorAudio;
     private final GeneradorAudio generadorAudio;
     private final RecomendacionProblema recomendacionProblema;
-    private final ProblemaRepository problemaRepository;
-    private final SugerenciaRepository sugerenciaRepository;
+    private final Problema problema;
+    private final Sugerencia sugerencia;
     public SugerenciaProblemaService(AlmacenadorAudio almacenadorAudio,
                                      GeneradorAudio generadorAudio,
                                      RecomendacionProblema recomendacionProblema,
-                                     ProblemaRepository problemaRepository,
-                                     SugerenciaRepository sugerenciaRepository) {
+                                     Problema problema,
+                                     Sugerencia sugerencia) {
         this.almacenadorAudio = almacenadorAudio;
         this.generadorAudio = generadorAudio;
         this.recomendacionProblema = recomendacionProblema;
-        this.problemaRepository = problemaRepository;
-        this.sugerenciaRepository = sugerenciaRepository;
+        this.problema = problema;
+        this.sugerencia = sugerencia;
     }
 
-
     @Override
-    public SugerenciaResponse obtenerRecomendacionYSugerencia(SugerenciaRequest sugerenciaRequest) {
+    public SugerenciaResponse obtenerRecomendacionYSugerencia(RespuestaFinalRequest respuestaFinalRequest) {
 
-        SugerenciaProblemaIADto sugerencia = this.recomendacionProblema.obtenerRecomendacion(sugerenciaRequest);
+        SugerenciaProblemaIADto sugerencia = this.recomendacionProblema.obtenerRecomendacion(respuestaFinalRequest);
 
-        var problema = this.problemaRepository.crear(new Problema(sugerenciaRequest.getProblema(),
-                sugerenciaRequest.getEdadCliente(),
-                sugerenciaRequest.getGeneroCliente(),
+        var problema = this.problema.crear(new ProblemaRequest(respuestaFinalRequest.getProblema(),
+                respuestaFinalRequest.getEdadCliente(),
+                respuestaFinalRequest.getGeneroCliente(),
                 sugerencia.getTipoProblema()));
 
         List<Integer> productIds = new ArrayList<>();//luxeneProductService.searchBestProductsAcordingToSuggestion(request.getMensaje(),sugerencia);
@@ -64,12 +63,12 @@ public class SugerenciaProblemaService implements SugerenciaProblema {
                 .map(String::valueOf)
                 .collect(Collectors.joining());
 
-        this.sugerenciaRepository.crear(new Sugerencia(
-                sugerencia.getComponentesSugeridosCliente(),
-                sugerencia.getRutinaSugeridaCliente(),
-                audioUrl,
-                ids,
-                problema));
+        this.sugerencia.crear( SugerenciaRequest.builder()
+                        .solucionComponenteQuimico(sugerencia.getComponentesSugeridosCliente())
+                        .solucionRutina(sugerencia.getRutinaSugeridaCliente())
+                        .idsProductos(ids)
+                        .problemaId(problema.getId())
+                .build());
 
         return new SugerenciaResponse(sugerenciaCliente, audioUrl, productIds);
 

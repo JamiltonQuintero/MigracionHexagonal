@@ -1,7 +1,5 @@
 package com.migracion.hexagonal.beanconfiguracion;
 
-import com.migracion.hexagonal.sugerencia.adaptador.externos.OpenIACliente;
-import com.migracion.hexagonal.sugerencia.adaptador.externos.SugerenciaOpenIA;
 import com.migracion.hexagonal.sugerencia.puerto.SugerenciaIA;
 import com.migracion.hexagonal.sugerencia.servicio.RecomendacionProblema;
 import com.migracion.hexagonal.sugerencia.servicio.impl.RecomendacionProblemaImpl;

@@ -5,7 +5,7 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.migracion.hexagonal.solucionproblema.adaptador.externos.utils.ConstantesGlobales;
-import com.migracion.hexagonal.sugerencia.puerto.AlmacenadorAudio;
+import com.migracion.hexagonal.solucionproblema.puerto.AlmacenadorAudio;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

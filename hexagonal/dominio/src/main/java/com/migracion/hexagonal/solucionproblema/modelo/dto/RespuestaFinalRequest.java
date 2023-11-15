@@ -1,4 +1,4 @@
-package com.migracion.hexagonal.sugerencia.modelo.dto;
+package com.migracion.hexagonal.solucionproblema.modelo.dto;
 
 import com.migracion.hexagonal.problema.modelo.enums.GeneroEnum;
 import lombok.AllArgsConstructor;

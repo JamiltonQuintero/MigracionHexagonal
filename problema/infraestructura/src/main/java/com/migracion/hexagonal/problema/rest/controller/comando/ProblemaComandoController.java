@@ -22,8 +22,9 @@ public class ProblemaComandoController {
 
 	@PostMapping()
 	public ResponseEntity<ProblemaDto> getProductIdsAndSuggestion(@RequestBody ProblemaComando comando) {
-		var problema = this.problemaCreacion.crear(comando);
-		return new ResponseEntity<>(problema, HttpStatus.OK);
+		//var problema = this.problemaCreacion.crear(comando);
+		System.out.println(comando);
+		return new ResponseEntity<>(new ProblemaDto(), HttpStatus.OK);
 	}
 
 }

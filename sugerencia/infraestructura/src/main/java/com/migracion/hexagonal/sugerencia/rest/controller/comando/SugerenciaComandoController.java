@@ -21,7 +21,8 @@ public class SugerenciaComandoController {
 
 	@PostMapping()
 	public ResponseEntity<HttpStatus> registrar(@RequestBody SugerenciaComando comando) {
-		this.sugerenciaCreacion.crear(comando);
+		//this.sugerenciaCreacion.crear(comando);
+		System.out.println(comando);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

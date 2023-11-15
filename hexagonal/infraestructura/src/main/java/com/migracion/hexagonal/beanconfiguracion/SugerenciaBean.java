@@ -1,8 +1,8 @@
 package com.migracion.hexagonal.beanconfiguracion;
 
-import com.migracion.hexagonal.sugerencia.puerto.SugerenciaIA;
-import com.migracion.hexagonal.sugerencia.servicio.RecomendacionProblema;
-import com.migracion.hexagonal.sugerencia.servicio.impl.RecomendacionProblemaImpl;
+import com.migracion.hexagonal.solucionproblema.puerto.SugerenciaIA;
+import com.migracion.hexagonal.solucionproblema.servicio.RecomendacionProblema;
+import com.migracion.hexagonal.solucionproblema.servicio.impl.RecomendacionProblemaImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

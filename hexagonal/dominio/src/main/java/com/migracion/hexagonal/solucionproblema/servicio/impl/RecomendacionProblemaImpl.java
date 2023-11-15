@@ -1,9 +1,9 @@
-package com.migracion.hexagonal.sugerencia.servicio.impl;
+package com.migracion.hexagonal.solucionproblema.servicio.impl;
 
-import com.migracion.hexagonal.sugerencia.modelo.dto.SugerenciaProblemaIADto;
-import com.migracion.hexagonal.sugerencia.modelo.dto.RespuestaFinalRequest;
-import com.migracion.hexagonal.sugerencia.puerto.SugerenciaIA;
-import com.migracion.hexagonal.sugerencia.servicio.RecomendacionProblema;
+import com.migracion.hexagonal.solucionproblema.modelo.dto.RespuestaFinalRequest;
+import com.migracion.hexagonal.solucionproblema.modelo.dto.SugerenciaProblemaIADto;
+import com.migracion.hexagonal.solucionproblema.puerto.SugerenciaIA;
+import com.migracion.hexagonal.solucionproblema.servicio.RecomendacionProblema;
 
 import java.util.concurrent.CompletableFuture;
 

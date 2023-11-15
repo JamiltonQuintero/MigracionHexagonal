@@ -1,0 +1,69 @@
+aws:
+  polly:
+    access-key: ${AWS_POLLY_ACCESS_KEY}
+    secret-key: ${AWS_POLLY_SECRET_KEY}
+azure:
+  storage:
+    connection-string: ${AZURE_STORAGE_CONNECTION_STRING}
+    containerName: ${AZURE_STORAGE_CONTAINER_NAME}
+feign:
+  name:
+    openaia: OpenIA
+  url:
+    openaia: https://api.openai.com/v1/completions
+jwt:
+  expiration: 86466
+  header: Authorization
+  secret: tasksSecret
+openai:
+  api-key: ${OPENIA_API_KEY}
+problema:
+  name: MircoservicioProblema
+  url: http://localhost:8096/problemas
+
+server:
+  port: 8095
+sugerencia:
+  name: MircoservicioSugerencia
+  url: http://localhost:8097/sugerencias
+
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      problema:
+        failureRateThreshold: 50
+        waitDurationInOpenState: 20s
+        permittedNumberOfCallsInHalfOpenState: 2
+        minimumNumberOfCalls: 5
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        eventConsumerBufferSize: 10
+        registerHealthIndicator: true
+      sugerencia:
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+        permittedNumberOfCallsInHalfOpenState: 1
+        minimumNumberOfCalls: 2
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        eventConsumerBufferSize: 10
+        registerHealthIndicator: true
+  retry:
+    instances:
+      problema:
+        maxAttempts: 2
+        waitDuration: 1s
+      sugerencia:
+        maxAttempts: 3
+        waitDuration: 3s
+  timelimiter:
+    instances:
+      remittance-service:
+        timeoutDuration: 5s
+        cancelRunningFuture: true
+
+# actuator
+management:
+  endpoint.health.show-details: always
+  health.circuitbreakers.enabled: true

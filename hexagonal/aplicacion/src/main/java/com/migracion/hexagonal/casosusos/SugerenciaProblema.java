@@ -1,8 +1,8 @@
 package com.migracion.hexagonal.casosusos;
 
 
-import com.migracion.hexagonal.sugerencia.modelo.dto.RespuestaFinalRequest;
-import com.migracion.hexagonal.sugerencia.modelo.dto.SugerenciaResponse;
+import com.migracion.hexagonal.solucionproblema.modelo.dto.RespuestaFinalRequest;
+import com.migracion.hexagonal.solucionproblema.modelo.dto.SugerenciaResponse;
 
 public interface SugerenciaProblema {
 

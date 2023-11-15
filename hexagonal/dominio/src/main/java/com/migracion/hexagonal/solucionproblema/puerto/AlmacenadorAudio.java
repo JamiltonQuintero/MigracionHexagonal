@@ -1,4 +1,4 @@
-package com.migracion.hexagonal.sugerencia.puerto;
+package com.migracion.hexagonal.solucionproblema.puerto;
 
 import java.io.InputStream;
 

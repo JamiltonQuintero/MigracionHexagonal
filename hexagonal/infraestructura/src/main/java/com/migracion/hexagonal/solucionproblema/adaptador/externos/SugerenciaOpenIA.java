@@ -3,7 +3,7 @@ package com.migracion.hexagonal.solucionproblema.adaptador.externos;
 import com.migracion.hexagonal.solucionproblema.adaptador.externos.dto.SolicitudGpt;
 import com.migracion.hexagonal.solucionproblema.adaptador.externos.restclient.OpenIACliente;
 import com.migracion.hexagonal.solucionproblema.adaptador.externos.utils.ConfigGpt;
-import com.migracion.hexagonal.sugerencia.puerto.SugerenciaIA;
+import com.migracion.hexagonal.solucionproblema.puerto.SugerenciaIA;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
